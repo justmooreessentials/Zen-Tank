@@ -13,7 +13,6 @@
             position: absolute; top: 0; width: 100%; height: 50px;
             background: rgba(0,0,0,0.5); color: white; display: flex;
             align-items: center; padding-left: 20px; z-index: 5;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -25,43 +24,33 @@
     <script>
         const canvas = document.getElementById('tank');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; 
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
-        // Using your cleaned filenames
         const ambientSound = new Audio('ocean.mp3'); 
         ambientSound.loop = true;
 
-        const bgImage = new Image(); 
+        // Create images and wait for them to load
+        const bgImage = new Image();
         bgImage.src = 'FishTank.png';
-        
-        const fishImage = new Image(); 
+        bgImage.onload = () => console.log("Background loaded");
+
+        const fishImage = new Image();
         fishImage.src = 'fish1.png';
-
-        class Fish {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * (canvas.height - 100) + 50;
-                this.vx = (Math.random() - 0.5) * 2;
-            }
-            update() {
-                this.x += this.vx;
-                if (this.x < -100) this.x = canvas.width + 100;
-                if (this.x > canvas.width + 100) this.x = -100;
-            }
-            draw() {
-                ctx.drawImage(fishImage, this.x, this.y, 100, 60);
-            }
-        }
-
-        const fishList = Array.from({length: 5}, () => new Fish());
+        fishImage.onload = () => console.log("Fish loaded");
 
         function animate() {
-            // Draw background first
-            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+            // Draw background
+            if (bgImage.complete) {
+                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.fillStyle = "#004e64";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
             // Draw fish
-            fishList.forEach(f => { f.update(); f.draw(); });
+            if (fishImage.complete) {
+                ctx.drawImage(fishImage, 100, 100, 100, 60);
+            }
             requestAnimationFrame(animate);
         }
 
