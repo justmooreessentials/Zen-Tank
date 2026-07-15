@@ -17,25 +17,34 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
+        // Try to load without double extensions
         const ambientSound = new Audio('ocean.mp3'); 
         ambientSound.loop = true;
 
-        // Use CLEAN filenames here
         const bg = new Image(); bg.src = 'FishTank.png';
         const f1 = new Image(); f1.src = 'fish1.png';
 
         function animate() {
-            // Only draw if images are loaded
-            if (bg.complete) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-            if (f1.complete) ctx.drawImage(f1, 100, 100, 100, 100);
+            // Debug: If bg isn't loaded, draw a green rectangle
+            if (bg.complete && bg.naturalWidth !== 0) {
+                ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.fillStyle = "green"; 
+                ctx.fillRect(0, 0, 200, 200); // Shows green box if FishTank.png is missing
+            }
+            
+            if (f1.complete && f1.naturalWidth !== 0) {
+                ctx.drawImage(f1, 100, 100, 100, 100);
+            }
             requestAnimationFrame(animate);
         }
 
         function startExperience() {
             document.getElementById('start-overlay').style.display = 'none';
-            ambientSound.play();
+            ambientSound.play().catch(e => console.log("Audio Error:", e));
             animate();
         }
     </script>
 </body>
+</html>
 </html>
