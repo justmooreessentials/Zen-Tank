@@ -2,18 +2,9 @@
 <html lang="en">
 <head>
     <style>
-        body { margin: 0; overflow: hidden; background: #004e64; font-family: sans-serif; }
-        #start-overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: flex; justify-content: center; align-items: center; 
-            background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; 
-            font-size: 24px; z-index: 10;
-        }
-        #top-bar {
-            position: absolute; top: 0; width: 100%; height: 50px;
-            background: rgba(0,0,0,0.5); color: white; display: flex;
-            align-items: center; padding-left: 20px; z-index: 5;
-        }
+        body { margin: 0; overflow: hidden; background: #004e64; }
+        #start-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; font-size: 24px; z-index: 10; }
+        #top-bar { position: absolute; top: 0; width: 100%; height: 50px; background: rgba(0,0,0,0.5); color: white; display: flex; align-items: center; padding-left: 20px; z-index: 5; }
     </style>
 </head>
 <body>
@@ -29,33 +20,12 @@
         const ambientSound = new Audio('ocean.mp3.mp3'); 
         ambientSound.loop = true;
 
-        // Load background and fish
-        const bgImage = new Image(); bgImage.src = 'FishTank.png.png';
-        const fishImage = new Image(); fishImage.src = 'fish1.png.png';
-
-        class Fish {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 2;
-                this.vy = (Math.random() - 0.5) * 0.5;
-            }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if (this.x < -100) this.x = canvas.width + 100;
-                if (this.x > canvas.width + 100) this.x = -100;
-            }
-            draw() {
-                ctx.drawImage(fishImage, this.x, this.y, 80, 40);
-            }
-        }
-
-        const fishList = Array.from({length: 5}, () => new Fish());
+        const bg = new Image(); bg.src = 'FishTank.png.png';
+        const f1 = new Image(); f1.src = 'fish1.png.png';
 
         function animate() {
-            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height); // Background
-            fishList.forEach(f => { f.update(); f.draw(); });
+            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(f1, 100, 100, 100, 100); // Draw one fish at a fixed spot to test
             requestAnimationFrame(animate);
         }
 
@@ -64,6 +34,9 @@
             ambientSound.play();
             animate();
         }
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
