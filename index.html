@@ -1,19 +1,66 @@
-﻿<!-- Copy and paste this code into your index.html -->
-<img src="AmazonSwordPlant.png.png">
-<img src="FishTank.png.png">
-<img src="IntricateSpiderwoodBranch.png.png">
-<img src="SmoothGreyRiverStone.png.png">
-<img src="WeatheredTerracottaPot.png.png">
-<img src="fish1.png.png">
-<img src="fish2.png.png">
-<img src="fish3.png.png">
-<img src="fish4.png.png">
-<img src="fish5.png.png">
-<img src="fish6.png.png">
-<img src="fish7.png.png">
-<img src="fish8.png.png">
-<img src="fish9.png.png">
-<img src="fish10.png.png">
-<img src="fish11.png.png">
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body { margin: 0; overflow: hidden; background: #004e64; font-family: sans-serif; }
+        #start-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center; 
+            background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; 
+            font-size: 24px; z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="start-overlay" onclick="startExperience()">Tap to Enter the Zen Tank</div>
+    <canvas id="tank"></canvas>
 
-<audio src="ocean.mp3.mp3" autoplay loop></audio>
+    <script>
+        const canvas = document.getElementById('tank');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+        // Updated to match your specific filenames
+        const ambientSound = new Audio('ocean.mp3.mp3'); 
+        ambientSound.loop = true;
+
+        class Fish {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.2; 
+                this.color = `hsla(${180 + Math.random() * 40}, 70%, 70%, 0.8)`;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < -100) this.x = canvas.width + 100;
+                if (this.x > canvas.width + 100) this.x = -100;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, 30, 15, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const fishList = Array.from({length: 10}, () => new Fish());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fishList.forEach(f => { f.update(); f.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        function startExperience() {
+            document.getElementById('start-overlay').style.display = 'none';
+            ambientSound.play().catch(e => console.log("Audio play failed: ", e));
+            animate();
+        }
+    </script>
+</body>
+</html>
