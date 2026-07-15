@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
     <style>
-        body { margin: 0; overflow: hidden; background: #004e64; }
-        #start-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; font-size: 24px; z-index: 10; }
-        #top-bar { position: absolute; top: 0; width: 100%; height: 50px; background: rgba(0,0,0,0.5); color: white; display: flex; align-items: center; padding-left: 20px; z-index: 5; }
+        body { margin: 0; overflow: hidden; background: #004e64; font-family: sans-serif; }
+        #start-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center; 
+            background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; 
+            font-size: 24px; z-index: 10;
+        }
+        #top-bar {
+            position: absolute; top: 0; width: 100%; height: 50px;
+            background: rgba(0,0,0,0.5); color: white; display: flex;
+            align-items: center; padding-left: 20px; z-index: 5;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -15,17 +25,43 @@
     <script>
         const canvas = document.getElementById('tank');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; 
+        canvas.height = window.innerHeight;
 
-        const ambientSound = new Audio('ocean.mp3.mp3'); 
+        // Using your cleaned filenames
+        const ambientSound = new Audio('ocean.mp3'); 
         ambientSound.loop = true;
 
-        const bg = new Image(); bg.src = 'FishTank.png.png';
-        const f1 = new Image(); f1.src = 'fish1.png.png';
+        const bgImage = new Image(); 
+        bgImage.src = 'FishTank.png';
+        
+        const fishImage = new Image(); 
+        fishImage.src = 'fish1.png';
+
+        class Fish {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * (canvas.height - 100) + 50;
+                this.vx = (Math.random() - 0.5) * 2;
+            }
+            update() {
+                this.x += this.vx;
+                if (this.x < -100) this.x = canvas.width + 100;
+                if (this.x > canvas.width + 100) this.x = -100;
+            }
+            draw() {
+                ctx.drawImage(fishImage, this.x, this.y, 100, 60);
+            }
+        }
+
+        const fishList = Array.from({length: 5}, () => new Fish());
 
         function animate() {
-            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-            ctx.drawImage(f1, 100, 100, 100, 100); // Draw one fish at a fixed spot to test
+            // Draw background first
+            ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+            // Draw fish
+            fishList.forEach(f => { f.update(); f.draw(); });
             requestAnimationFrame(animate);
         }
 
@@ -37,6 +73,5 @@
     </script>
 </body>
 </html>
-    </script>
 </body>
 </html>
