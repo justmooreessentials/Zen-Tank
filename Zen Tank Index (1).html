@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body { margin: 0; overflow: hidden; background: #004e64; font-family: sans-serif; }
+        #start-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; justify-content: center; align-items: center; 
+            background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; 
+            font-size: 24px; z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="start-overlay" onclick="startExperience()">Tap to Enter the Zen Tank</div>
+    <canvas id="tank"></canvas>
+
+    <script>
+        const canvas = document.getElementById('tank');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+        // Load your ambient audio file
+        const ambientSound = new Audio('ocean.mp3'); 
+        ambientSound.loop = true;
+
+        class Fish {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.8; // Even slower movement
+                this.vy = (Math.random() - 0.5) * 0.2; 
+                this.color = `hsla(${180 + Math.random() * 40}, 70%, 70%, 0.8)`;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < -100) this.x = canvas.width + 100;
+                if (this.x > canvas.width + 100) this.x = -100;
+            }
+            draw() {
+                // Drawing a simple "Fish" shape (an oval)
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, 30, 15, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        const fishList = Array.from({length: 10}, () => new Fish());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            fishList.forEach(f => { f.update(); f.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        function startExperience() {
+            document.getElementById('start-overlay').style.display = 'none';
+            ambientSound.play();
+            animate();
+        }
+    </script>
+</body>
+</html>
