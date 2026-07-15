@@ -2,18 +2,9 @@
 <html lang="en">
 <head>
     <style>
-        body { margin: 0; overflow: hidden; background: #004e64; font-family: sans-serif; }
-        #start-overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: flex; justify-content: center; align-items: center; 
-            background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; 
-            font-size: 24px; z-index: 10;
-        }
-        #top-bar {
-            position: absolute; top: 0; width: 100%; height: 50px;
-            background: rgba(0,0,0,0.5); color: white; display: flex;
-            align-items: center; padding-left: 20px; z-index: 5;
-        }
+        body { margin: 0; overflow: hidden; background: #004e64; }
+        #start-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0, 50, 70, 0.8); color: white; cursor: pointer; font-size: 24px; z-index: 10; }
+        #top-bar { position: absolute; top: 0; width: 100%; height: 50px; background: rgba(0,0,0,0.5); color: white; display: flex; align-items: center; padding-left: 20px; z-index: 5; }
     </style>
 </head>
 <body>
@@ -29,28 +20,14 @@
         const ambientSound = new Audio('ocean.mp3'); 
         ambientSound.loop = true;
 
-        // Create images and wait for them to load
-        const bgImage = new Image();
-        bgImage.src = 'FishTank.png';
-        bgImage.onload = () => console.log("Background loaded");
-
-        const fishImage = new Image();
-        fishImage.src = 'fish1.png';
-        fishImage.onload = () => console.log("Fish loaded");
+        // Use CLEAN filenames here
+        const bg = new Image(); bg.src = 'FishTank.png';
+        const f1 = new Image(); f1.src = 'fish1.png';
 
         function animate() {
-            // Draw background
-            if (bgImage.complete) {
-                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-            } else {
-                ctx.fillStyle = "#004e64";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
-
-            // Draw fish
-            if (fishImage.complete) {
-                ctx.drawImage(fishImage, 100, 100, 100, 60);
-            }
+            // Only draw if images are loaded
+            if (bg.complete) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+            if (f1.complete) ctx.drawImage(f1, 100, 100, 100, 100);
             requestAnimationFrame(animate);
         }
 
@@ -60,7 +37,5 @@
             animate();
         }
     </script>
-</body>
-</html>
 </body>
 </html>
